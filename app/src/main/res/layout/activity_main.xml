@@ -11,7 +11,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="409dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/id_songTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +20,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/id_songTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
@@ -76,7 +76,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/id_btnPrevious"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -85,16 +85,17 @@
                 app:srcCompat="@drawable/ic_previous_24_w" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/id_btPlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="0"
+                android:onClick="play"
                 app:srcCompat="@drawable/ic_play_48_w" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/id_btn_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"

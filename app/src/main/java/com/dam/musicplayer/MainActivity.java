@@ -16,8 +16,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**  Variables globales    **/
      private static final String TAG = "MainActivity";
-    
-    
+
+
+
     /** ajout automatique de la lecture **/
 
     MediaPlayer mediaPlayer = new MediaPlayer();
@@ -26,50 +27,13 @@ public class MainActivity extends AppCompatActivity {
     public void play(View view){
         mediaPlayer.start();
         Log.i(TAG, "play: ");
+
     }
 
     public void pause(View view){
         mediaPlayer.pause();
         Log.i(TAG, "pause: ");
     }
-    // START Volume
-  /** private void volume(){
-        // association de la seekbar au java
-        SeekBar sbVolume = findViewById(R.id.sbVolume);
-
-        // initialiser le manager en tant que service
-        AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-
-        // Volume max du terminal.
-        int volumeMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        // valorisation de cette valeur au max de la seekbar
-        sbVolume.setMax(volumeMax);
-
-        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        // ajustement de la position du curseur
-        sbVolume.setProgress(currentVolume);
-
-        sbVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.i(TAG, "onProgressChanged: Volume = " + Integer.toString(progress));
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress,0);
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-    }**/
-    // END Volume
 
     private void position(){
         SeekBar sbPosition = findViewById(R.id.sbPosition);
