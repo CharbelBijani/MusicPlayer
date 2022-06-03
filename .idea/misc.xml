@@ -3,7 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Charbel/IdeaProjects/MusicPlayer/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/Charbel/IdeaProjects/MusicPlayer/app/src/main/res/drawable/ic_baseline_pause_circle_filled_24.xml" value="0.2115" />
+        <entry key="..\:/Users/Charbel/IdeaProjects/MusicPlayer/app/src/main/res/drawable/ic_baseline_play_circle_filled_24.xml" value="0.2115" />
+        <entry key="..\:/Users/Charbel/IdeaProjects/MusicPlayer/app/src/main/res/drawable/ic_baseline_skip_next_24.xml" value="0.2115" />
+        <entry key="..\:/Users/Charbel/IdeaProjects/MusicPlayer/app/src/main/res/drawable/ic_baseline_skip_previous_24.xml" value="0.2115" />
+        <entry key="..\:/Users/Charbel/IdeaProjects/MusicPlayer/app/src/main/res/drawable/ic_next_24_w.xml" value="0.2115" />
+        <entry key="..\:/Users/Charbel/IdeaProjects/MusicPlayer/app/src/main/res/drawable/ic_play_48_w.xml" value="0.2115" />
+        <entry key="..\:/Users/Charbel/IdeaProjects/MusicPlayer/app/src/main/res/drawable/ic_previous_24_w.xml" value="0.2115" />
+        <entry key="..\:/Users/Charbel/IdeaProjects/MusicPlayer/app/src/main/res/layout/activity_main.xml" value="0.20416666666666666" />
       </map>
     </option>
   </component>

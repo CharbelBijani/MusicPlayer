@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "pause: ");
     }
     // START Volume
-    private void volume(){
+  /** private void volume(){
         // association de la seekbar au java
         SeekBar sbVolume = findViewById(R.id.sbVolume);
 
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }**/
     // END Volume
 
     private void position(){
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         /** Methode 2 avec les boutons **/
         mediaPlayer=MediaPlayer.create(this, R.raw.sound1);
         // Lancement des methodes
-        volume();
+        //volume();
         position();
 
     }
