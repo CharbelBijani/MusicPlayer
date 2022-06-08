@@ -17,6 +17,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -50,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<ModelSong> songArrayList;
 
     public static final int PERMISSION_READ = 0;
+
+    private int songIndex = 0;
+
+    double currentPos, totalDuration;
 
 
     // Méthode d'initialisation
@@ -145,9 +150,78 @@ public class MainActivity extends AppCompatActivity {
         adapterSong.setOnItemClickListener(new AdapterSong.OnItemClickListener() {
             @Override
             public void OnItemClick(int position, View view) {
+                playSong(position);
 
             }
         });
+    }
+
+    private void playSong (int pos){
+        try {
+            mediaPlayer.reset(); // pour commencer sur de bonnes bases
+            mediaPlayer.setDataSource(this, songArrayList.get(pos).getSongUri());// Le chemin vers la chanson
+            mediaPlayer.prepare();// cache mémoire pour la lecture
+            mediaPlayer.start();
+
+            // Affichage du bouton pause
+            btnPlay.setImageResource(R.drawable.ic_pause_48_w);
+            // Affichage du titre
+            tvSongTitle.setText(songArrayList.get(pos).getSongTitle());
+            // Position dans la liste pour le deplacement avec next et previous
+            songIndex = pos;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        // On lance la methode pour le deplacement de la seekbar et la gestion du temps des TV
+        setSongProgress();
+
+    }
+
+    private void setSongProgress() {
+        // recuperation des données du médiaPlayer
+        currentPos = mediaPlayer.getCurrentPosition();
+        totalDuration = mediaPlayer.getDuration(); // resultat en millis
+
+        // Assignation des valeurs aux TV de gestion du temps
+        tvCurrentPos.setText(timerConvertion((long) currentPos));
+        tvTotalDuration.setText(timerConvertion((long) totalDuration));
+
+        // gestion de la seekbar
+        sbPosition.setMax((int) totalDuration);
+
+        // gestion du thread qui ve s'occuper du temps "reel"
+        final Handler handler = new Handler();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    currentPos = mediaPlayer.getCurrentPosition();
+                    tvCurrentPos.setText(timerConvertion((long) currentPos));
+                    sbPosition.setProgress((int) currentPos);
+                    handler.postDelayed(this, 1000);
+                } catch (IllegalStateException ed){
+                    ed.printStackTrace();
+                }
+             }
+        };
+        handler.postDelayed(runnable, 1000);
+
+    }
+
+    public String timerConvertion(long value){
+        String songDuration;
+        int dur = (int) value; // la duree totale en millis
+        int hrs = dur / 3600000;
+        int mns = (dur / 60000) % 60000;
+        int scs = dur % 60000 / 1000;
+
+        if(hrs > 0) {
+            songDuration = String.format("%02d:%02d:%02d:", hrs, mns, scs);
+        } else {
+            songDuration = String.format("%02d:%02d:", mns, scs);
+        }
+        return songDuration;
     }
 
 
@@ -209,16 +283,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /** Methode 1 lecture automatique du son
-         mediaPlayer = MediaPlayer.create(this, R.raw.sound);
-         mediaPlayer.start();
-         **/
-
-        /** Methode 2 avec les boutons **/
-        mediaPlayer = MediaPlayer.create(this, R.raw.sound2);
-        // Lancement des methodes
-        //volume();
-        // position();
         init();
         checkPermission();
         getAudioFiles();
