@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,14 +26,10 @@ public class AdapterSong extends RecyclerView.Adapter<AdapterSong.MyViewHolder> 
 
     //2 constructeurs
 
-
     public AdapterSong(Context context, ArrayList<ModelSong> songArrayList) {
         this.context = context;
         this.songArrayList = songArrayList;
     }
-
-
-
 
 
     @NonNull
@@ -65,17 +62,17 @@ public class AdapterSong extends RecyclerView.Adapter<AdapterSong.MyViewHolder> 
         // Methode normale
 
         RequestOptions options = new RequestOptions()
-               .centerCrop()
-               .error(R.drawable.ic_note_24)
-               .placeholder(R.drawable.ic_note_24);
+                .centerCrop()
+                .error(R.drawable.ic_note_24)
+                .placeholder(R.drawable.ic_note_24);
 
         Glide.with(context)
-               .load(imgUri)
-               .apply(options)
-               .fitCenter()
-               .override(150, 150)
-               .diskCacheStrategy(DiskCacheStrategy.ALL)
-               .into(holder.cover);
+                .load(imgUri)
+                .apply(options)
+                .fitCenter()
+                .override(150, 150)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.cover);
 
 
     }
@@ -84,6 +81,7 @@ public class AdapterSong extends RecyclerView.Adapter<AdapterSong.MyViewHolder> 
     public int getItemCount() {
         return songArrayList.size();
     }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView title, artist;
@@ -95,6 +93,25 @@ public class AdapterSong extends RecyclerView.Adapter<AdapterSong.MyViewHolder> 
             artist = itemView.findViewById(R.id.id_tvArtiste);
             cover = itemView.findViewById(R.id.id_ivCover);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClickListener.OnItemClick(getAdapterPosition(), view);
+                }
+            });
+
         }
     }
+
+    // La gestion du click
+    public OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void OnItemClick(int position, View view);
+    }
+    // constructeur qui sera appelé dans le MainActivity
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
 }
