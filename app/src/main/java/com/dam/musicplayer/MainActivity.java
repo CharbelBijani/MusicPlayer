@@ -152,6 +152,9 @@ public class MainActivity extends AppCompatActivity {
             public void OnItemClick(int position, View view) {
                 playSong(position);
 
+
+                //co
+
             }
         });
     }
