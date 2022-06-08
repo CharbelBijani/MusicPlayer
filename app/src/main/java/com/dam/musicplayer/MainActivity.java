@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
          **/
 
         /** Methode 2 avec les boutons **/
-        mediaPlayer=MediaPlayer.create(this, R.raw.sound1);
+        mediaPlayer=MediaPlayer.create(this, R.raw.sound2);
         // Lancement des methodes
         //volume();
         position();
