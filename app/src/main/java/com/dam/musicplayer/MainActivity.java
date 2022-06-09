@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void playSong (int pos){
+    private void playSong(int pos) {
         try {
             mediaPlayer.reset(); // pour commencer sur de bonnes bases
             mediaPlayer.setDataSource(this, songArrayList.get(pos).getSongUri());// Le chemin vers la chanson
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             tvSongTitle.setText(songArrayList.get(pos).getSongTitle());
             // Position dans la liste pour le deplacement avec next et previous
             songIndex = pos;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // On lance la methode pour le deplacement de la seekbar et la gestion du temps des TV
@@ -203,72 +203,133 @@ public class MainActivity extends AppCompatActivity {
                     tvCurrentPos.setText(timerConvertion((long) currentPos));
                     sbPosition.setProgress((int) currentPos);
                     handler.postDelayed(this, 1000);
-                } catch (IllegalStateException ed){
+                } catch (IllegalStateException ed) {
                     ed.printStackTrace();
                 }
-             }
+            }
         };
         handler.postDelayed(runnable, 1000);
 
     }
 
-    public String timerConvertion(long value){
+    public String timerConvertion(long value) {
         String songDuration;
         int dur = (int) value; // la duree totale en millis
         int hrs = dur / 3600000;
         int mns = (dur / 60000) % 60000;
         int scs = dur % 60000 / 1000;
 
-        if(hrs > 0) {
-            songDuration = String.format("%02d:%02d:%02d:", hrs, mns, scs);
+        if (hrs > 0) {
+            songDuration = String.format("%02d:%02d:%02d", hrs, mns, scs);
         } else {
-            songDuration = String.format("%02d:%02d:", mns, scs);
+            songDuration = String.format("%02d:%02d", mns, scs);
         }
         return songDuration;
     }
 
+    // Gestion des boutons
+    private void prevSong() {
+        btnPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (songIndex > 0) {
+                    songIndex--;
+                } else {
+                    songIndex = songArrayList.size() - 1;
+                }
+                playSong(songIndex);
+            }
+        });
+    }
+
+    private void nextSong() {
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (songIndex == songArrayList.size()) {
+                    songIndex = 0;
+                } else {
+                    songIndex++;
+                }
+                playSong(songIndex);
+            }
+        });
+    }
+
+    private void setPause() {
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                    btnPlay.setImageResource(R.drawable.ic_play_48_w);
+                } else {
+                    mediaPlayer.start();
+                    btnPlay.setImageResource(R.drawable.ic_pause_48_w);
+                }
+
+            }
+        });
+    }
+
 
     private void setSong() {
+        // Initialisation des composants
+        init();
+        // Remplissage du tableau avec le résultat du content Provider
+        getAudioFiles();
+
+        // Gestion de la seekBar
+        sbPosition.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.pause();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                currentPos = seekBar.getProgress();
+                mediaPlayer.seekTo((int) currentPos);
+                mediaPlayer.start();
+
+            }
+        });
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                songIndex++;
+                if (songIndex < (songArrayList.size())) {
+                    playSong(songIndex);
+                } else {
+                    songIndex = 0;
+                    playSong(songIndex);
+                }
+            }
+        });
+
+        if (!songArrayList.isEmpty()) {
+            playSong(songIndex);
+            prevSong();
+            setPause();
+            nextSong();
+        }
     }
 
-    public void play(View view) {
-        mediaPlayer.start();
-        Log.i(TAG, "play: ");
-
-    }
-
-    public void pause(View view) {
-        mediaPlayer.pause();
-        Log.i(TAG, "pause: ");
-    }
 
     private void position() {
+        // Association de seekbar au Java
         SeekBar sbPosition = findViewById(R.id.sbPosition);
         // Definir la valeur max de la seekbar
         sbPosition.setMax(mediaPlayer.getDuration());
 
         // part one la gestion du deplacement du curseur par l'utilisateur
-        sbPosition.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.i(TAG, "Position dans le morceau : " + Integer.toString(progress));
-            }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                pause(sbPosition);
 
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                play(sbPosition);
-                mediaPlayer.seekTo(sbPosition.getProgress());
-
-            }
-        });
-
-        // part two gestion du deplacement du curseru par l'application
+        // part two gestion du deplacement du curseur par l'application
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -286,9 +347,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        init();
-        checkPermission();
-        getAudioFiles();
+        if (checkPermission()) {
+
+            setSong();
+        }
 
     }
 
@@ -296,5 +358,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mediaPlayer.stop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
     }
 }
